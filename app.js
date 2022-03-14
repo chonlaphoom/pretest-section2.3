@@ -9,12 +9,50 @@
  */
 
 const http = require('http');
+var jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+
 var optionList = ['B-INCOMESSF','BM70SSF','BEQSSF','B-FUTURESSF'];
 
 var hasCookie = false;
 if(optionList.includes(process.argv[2])){
     hasCookie = true;
 }
+
+const getIndexByType = () => {
+    const isIncluded = optionList.includes(process.argv[2]);
+    
+    if(!isIncluded){
+        // not found this option
+        return -1;
+    }
+
+    switch (process.argv[2]) {
+        case 'B-INCOMESSF':
+            return 1;
+        case 'BM70SSF':
+            return 2;
+        case 'BEQSSF':
+            return 3;
+        case 'B-FUTURESSF':
+            return 4;
+        default:
+            // fallback return empty
+            return -1;
+    }
+ }
+
+ const printNav = (html) => {
+    const index = getIndexByType();
+    if(index === -1) {
+        return;
+    }
+    const dom = new JSDOM(html)
+
+    console.log(dom.window.document.querySelectorAll('tr')[index].querySelectorAll('td')[1].textContent);
+ }
+
+
 
 var options = {
     host: 'codequiz.azurewebsites.net',
@@ -35,7 +73,7 @@ var options = {
         });
     
         res.on('end', function () {
-            console.log(data);
+            printNav(data);
         });
     });
     
