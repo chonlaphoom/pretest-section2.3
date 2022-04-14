@@ -1,1 +1,5 @@
-# pretest-section2.3
+# This is for pretest
+
+technology 
+- react + typescript 
+- react boostrap
